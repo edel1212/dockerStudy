@@ -91,6 +91,33 @@ host에서 실행되는 격리된 각각의 실행 환경이다.
 <br/>
 <hr/>
 
-## TODO : 도커 이미지 만들기 
+## 도커 이미지 만들기
+
+- 필요이유 
+  - 현재 사용중인 Container에 새로운 무언가를 추가하고 그것을 이미지화 한다면 그 이미지를 사용하여 새로운 컨테이너를 추가할 수 있게 된다.
+
+
+- 시나리오
+  - 1 . 우분투 이미지를 다운
+  - 2 . 해당 우분투에 깃을 추가하여 이미자화
+  - 3 . 해당 우분투는 그냥 우분투가 아닌 깃을 포함한 우분투가됨
+  - 4 . 해당 이미지를 기반으로 PHP, Python, Nodejs 등 다양한 서버 환경을 구축이 가능해짐
+
+
+- 시나리오 - Command
+  - 👉 우분투 Download : `docker pull ubuntu`
+  - 👉 우분투 컨테이너 실행 : `docker run -it --name my-ubuntu ubuntu bash`
+  - 👉 컨테이너 접근 : `docker exec -it my-ubuntu /bin/bash`
+  - 👉 apt Upate(깃 설치를 위함) : `apt upate`
+  - 👉 git 설치 : `apt install git`
+  - > 문제발생 : 현재 컨테이너만 git을 갖고있음 새로 ubuntu image를 써봤자 다시 깔아야함..
+  - 👉 git이 설치된 container를 Image 만듬 : `docker commit [타겟 Container] [Image-Name:Tag-Name] ` 
+  - 👉 commit으로 인해 image가 생성되었음 : `docker images`
+  - > 위와 같은 방법으로 git이 설치된 우분투를 기점으로 다양한 서버 기반을 설치하여 container가 생성이 가능해짐
+  - 👉 node version : `docker run --it --name [이름] [내가 만든 이미지] bash`
+
+<br/>
+<hr/>
+
 - https://seomal.com/map/1/129
 - https://www.youtube.com/watch?v=RMNOQXs-f68
