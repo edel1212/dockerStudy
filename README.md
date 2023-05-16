@@ -91,7 +91,7 @@ host에서 실행되는 격리된 각각의 실행 환경이다.
 <br/>
 <hr/>
 
-## 도커 이미지 만들기
+## 도커 이미지 만들기 (commit)
 
 - 필요이유 
   - 현재 사용중인 Container에 새로운 무언가를 추가하고 그것을 이미지화 한다면 그 이미지를 사용하여 새로운 컨테이너를 추가할 수 있게 된다.
@@ -119,16 +119,83 @@ host에서 실행되는 격리된 각각의 실행 환경이다.
 <br/>
 <hr/>
 
+## 도커 이미지 만들기 (dockerfile & build)
+- dockerfile의 장점은 생성될 image의 내용을 파일을 보고 알 수 있다는것이다
+- commit 과 build의 공통점
+  - Image를 만든다라는 공통점이 있다. 
+- commit 과 build의 차이점
+  - commit의 경우
+    - 내가 만든 Container를 기준으로 하여 Image를 생성한다. [ 백업과 같은 느낌 ]
+  - dockerfile의 경우
+    - 내부에 작성된 명령어의 순서에 맞춰 Image를 생성한다. [ 내가 아예 생성하는 느낌 ]
+
+
+### RUN, CMD, ENTRYPOINT 이란?
+
+- 3가지의 공통접은 Dockerfile 작성시 사용되는 명령문 중에 실행과 관련된 명령어이다
+- 차이점
+  - RUN
+    - 쉘에서 커맨드를 실행하는 것 처럼 이미지를 빌드 과정에 필요한 커맨드를 실행 하기 위해 사용된다.
+    - 보통 이미지 안에 특정 소프트웨어를 설치하기 위해 많이 사용된다.
+  - CMD
+    - 해당 이미지를 컨테이터로 띄울 때 디폴트로 실행할 커맨드 또는 ENTRYPOINT 명령문으로 지정된 커맨드에 디폴트로 넘길 파라미터를 지정할때 사용 된다.
+  - ENTRYPOINT
+    - CMD 명령문과 비스샇지만 컨테이터는 띄울때 항상 실행 되야하는 커맨드를 지정할 수있다
+    - 해당 명령으로 실행된 프로세스가 죽으면 컨테이너도 함께 종료된다.
+
+
+- 시나리오
+  - 1 . Dockerfile 생성 [ 확장자는 없음 ] 
+  - 2 . 해당 file 내부 
+    - 우분투 image를 기반으로 생성
+    - apt, python 설치
+    - 디렉토리 생성
+    - 해당 디렉토리에 로컬파일을 복사하여 추가
+    - container 생성 후 원하는 명령어 실행
+
+  
+### DockerFile
+
+```properties
+# - 사용될 Image 대상
+# FROM [베이스 이미지]
+FROM ubuntu
+
+# - Container가 생성되고 실행 될 명령어
+#   RUN을 여러개로 나누어서 작성해도 실행에는 문제가 없으나
+#   RUN 명령어 하나당 레이어가 하나씩 추가되기에 비효율적이다
+#   따라서 && 사용하여 명령어를 연결해주자!
+#   앞에 명령어가 성공하면 뒤에 명령어를 실행함
+# RUN [명령어]
+RUN apt update && apt install -y python3
+
+# 디렉토리가 없다면 생성해줌
+# midir -p /var/www/html 와 같은 의미 [-p 옵션 없으면 부모가 없다면 dir을 생성하지 않음 ]
+# WORKDIR에서는 불필요한 옵션임
+WORKDIR /var/www/html
+
+# container가 실행될 때 실행될 command
+# 형식 CMD["<커맨드>", "<파라미터1>", "<파라미터2>", ...]
+# docker run ubuntu ls  << 와 같음
+CMD ["python3". "-u", "-m" , "http.server"]
+```
+
+- 시나리오 - Command
+  - 👉 Dockerfile 실행 : `docker build -t [이미지이름 지정:버전지정] [사용될 Dockerfile 경로]` 
+
+<br/>
+<hr/>
+
 ## 도커 이미지 공유하기 (push)
 
 - Docker에서는 이미지를 만드는 방법이 2가지가 있다
   - 1 . commit을 통해 내가 수정한 컨테이터를 image화 함
   - 2 . build를 통해 Dockerfile을 생성함
 - 그렇다면 이것을 공유하여 사람들과 같이 쓰고싶을때는?
-  - `push`명령어를 통해 Registry(docker hub)에 올릴 수 있다. **(git과 매우 유사)** 
+  - `push`명령어를 통해 Registry(docker hub)에 올릴 수 있다. **(git과 매우 유사)**
 
 - 시나리오
-  - 1 . 우분투로 컨테이너 생성 
+  - 1 . 우분투로 컨테이너 생성
   - 2 . 해당 컨테이너에 파이썬을 설치
   - 3 . 이미지 생성
   - 4 . Docker hub에 등록
@@ -137,12 +204,17 @@ host에서 실행되는 격리된 각각의 실행 환경이다.
 - 시나리오 - Command
   - 👉 우분투 컨테이너 실행 : `docker run -it --name python-ubuntu ubuntu bash`
   - 👉 컨테이너 접근 : `docker exec -it my-ubuntu /bin/bash`
-  - 👉 python3 설치 : `apt upate & apt install -y python3`
+  - 👉 python3 설치 : `apt update && apt install -y python3`
   - 👉 image 생성  : `docker commit pyton-ubunt [docker hub 이름]/[image 이름]:[version]` //✅ 테그 기준으로 올라가기 떄문에 맞춰줘야함!!
     - ⭐️ 예시 코드 : `docker commit ptyon-ubuntu edel1212/python:1.0`
     - ⭐️ 예시 코드(테그별로 추가 가능) : `docker commit python-ubuntu-upgrade edel1212/python:2.0`
 > 현재 테스트 기준으로 dockerhub 레파지토리 명 : edel1212 / python3 이다.  위의 예시 코드를 사용하면 Tag 버전이 1.0으로 올라간 것을 확인 할 수 있으며
-> 
+>
 > docker pull edel1212/python3:1.0 으로 내려받을 수 있다.
+
+
+<br/>
+<hr/>
+
 
 - https://seomal.com/map/1/129
