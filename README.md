@@ -216,5 +216,53 @@ CMD ["python3". "-u", "-m" , "http.server"]
 <br/>
 <hr/>
 
+## Docker Network
 
+### 도커 네트워크란?
+
+- Docker 컨테이너는 각각 격리된 환경에서 돌아가기 떄문에 **기본적으로 다른 컨테이너와의 통신이 불가능** 하다.
+- Docker Network를 생성하여 연결하고 싶은 컨테이너를 연결해주면 각각 독립되어 있던 컨테이너가 **같은 네트워크 상에 있게 되므로 서로간의 연결이 가능**해진다.
+
+### 네트워크의 종류
+- Docker Network의 종류로는 `bridge`,`host`,`none`,`container`,`overlay`가 있다.
+  - `bridge`란?
+    - ***하나의 호소트*** 컴퓨터 내에세 여러 컨테이너들이 서로 소통할 수 있도록 해준다. 👉 브릿지(다리) 설정이 필요하다. *연결 해준다라는 개념*  
+    - 브릿지 설정이 되어있지 않은 컨테이너와는 통신이 불가능함
+    - 네트워크를 생성하면 디폴트로 `bridge`로 설정되어 생성된다.
+  - `host`란?
+    - 컨테이너를 호스트 컴퓨터와 동일한 네트워크에서 컨테이너를 돌리기 위해 사용
+    - 주로 컨테이너가 하나일때 사용된다.
+    - 호스트의 네트워크를 그대로 사용하기에 **포트포워딩 작업을 해줄 필요하가 없다.**
+    - ✅ ***하나만 존재할 수 있음!!***
+  - `none`란?
+    - 네트워크를 사용하지 않는 설정
+    - `--attachable` 설정을 통해 설정 가능
+  - `container`란? 
+    - 다른 컨테이너의 네트워크 환경을 공유한다.
+  - `overlay`란?
+    - 분산된 네트워크( 호스트가 여러대 )에서 Docker를 사용할 때 사용 - 서버가 어려대로 생각하면 된다.
+    - 각각의 호스트 (서버)에서 swarm mode가 활성화 되어 있어야한다.
+      - 설정이 되어있지 않다면 컴테이너 생성이 불가능함 
+
+### 명령어
+
+- Docker Network 조회
+  - `docker network ls` 
+- Docker Network 생성
+  - `docker network create 이름지정` 
+- Docker Network 삭제
+  - `docker network rm 이름지정`
+
+- 자세한 명령어는 https://docs.docker.com/engine/reference/commandline/network_create/ 확인
+
+
+<br/>
+<hr/>
+
+
+
+
+
+- https://gist.github.com/egoing/b62aa16573dd5c7c5da51fd429a5faa2 (sample code)
 - https://seomal.com/map/1/129
+- https://www.daleseo.com/docker-compose/
