@@ -260,8 +260,47 @@ CMD ["python3". "-u", "-m" , "http.server"]
 <hr/>
 
 
+## 도커 Compose
 
 
+### 사용이유?
+- 도커 컨테이너를 실핼할 때마다 연관 관계가 있는 컨테이너들을 하나하나 입력하고 기억하기가 쉽지 않을 것이다.
+  - ex) 웹브라우저 -> wordpress -> MySql 과 같이 하나의 어플리케이션이 구동 되기 위해 하나의 컴테이너만 필요한것이 아닌 다수의 컨테이너가  
+  필요하다면 이것을 명령어 하나하나 입력하여 사용하는것은 어렵고 직관적이지 않기에 쉽지 않않아서 ***하나의 파일에 실행 방법을 파일에 적어두고 한줄의 명령어로  
+  해당 파일을 구동하여 설정***하면 얼마나 편할 것인가 그렇기에`Docker-Compose`를 사용하는 것이다.
+
+
+### 시나리오 내용
+#### 일반 CLI 명렁어 설치 및 실행
+- docker network를 생성.
+  - `docker network create wordpress_net` 
+- mysql을 설치 및 시작한다.
+```shell
+docker 
+  run 
+    --name "db"                             ## 컨테이너 명 'db' 
+    -v "$(pwd)/db_data:/var/lib/mysql"      ## volume 설정 복사할 위치 : 복사대상 대상 
+    -e "MYSQL_ROOT_PASSWORD=123456"         ## root PW
+    -e "MYSQL_DATABASE=wordpress"           ## Databases 생성
+    -e "MYSQL_USER=wordpress_user"          ## 계정 생성
+    -e "MYSQL_PASSWORD=123456"              ## PW 생성
+    --network wordpress_net                 ## 처음에 생성 해준 네트워크에 연결 ( 브릿지 역할 )       
+mysql                                       ## 다운받을 이미지
+``` 
+- wordpress를 설치 및 시작한다.
+```shell
+docker 
+  run 
+    --name "app"                            ## 컨테이너 명 'app' 
+    -v "$(pwd)/app_data:/var/www/html"      ## volume 설정 복사할 위치 : 복사대상 대상 
+    -e "WORDPRESS_DB_HOST=db"               ## 연결한 Database 설정 👉 같은 네트워크의 name 설정한 것 지정
+    -e "WORDPRESS_DB_USER=wordpress_user"   ## 사용할 DB 계정
+    -e "WORDPRESS_DB_NAME=wordpress"        ## 사용할 Database
+    -e "WORDPRESS_DB_PASSWORD=123456"       ## PW 입력
+    -e "WORDPRESS_DEBUG=1"                  ## 환경변수 설정 - 디버깅 모드 설정 0 : false // 1 : true
+    --network wordpress_net                 ## 처음에 생성 해준 네트워크에 연결 ( 브릿지 역할 )       
+wordpress:latest                            ## 다운받을 이미지
+```
 
 - https://gist.github.com/egoing/b62aa16573dd5c7c5da51fd429a5faa2 (sample code)
 - https://seomal.com/map/1/129
