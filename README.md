@@ -259,6 +259,22 @@ CMD ["python3". "-u", "-m" , "http.server"]
 <br/>
 <hr/>
 
+## Docker Volume
+
+### Volume (-v)란?
+- Docker의 특성상 Container이기 때문에 해당 **컨테이터를 삭제**하는 순간 **안에 있던 모든 데이터가 사라진다.**
+- 그에 내가 사용하는 Host(머신)에 해당 파일의 중요 데이터의 경로의 데이터와 Host의 경로를 지정하여 동기화를 해주는것.
+- Volume 종류
+  - 👉 Volume을 직접 생성
+    - ex) `docker create volume 볼륨명지정` 
+      - 해당 방법의 단점은 `Mountpoint`가 임의로 지정이 된다는 것이다. **운영체제별로 다름**
+        - 그렇다면 ?
+          - `--opt` 옵션을 사용하여 볼륨의 옵션을 수정해 줄 수 있다.
+            - ex) `docker create volume --opt device=/Users/yoo/Desktop/DockerVolume 볼륨명지정`
+
+<br/>
+<hr/>
+
 
 ## 도커 Compose
 
