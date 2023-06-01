@@ -1,0 +1,6 @@
+# Image 지정
+FROM mariadb:10.6
+
+# 환경 변수 지정 - rootPW
+ENV MARIADB_ROOT_PASSWORD 123
+
