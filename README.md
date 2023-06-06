@@ -156,6 +156,7 @@ host에서 실행되는 격리된 각각의 실행 환경이다.
   
 ### DockerFile
 
+#### ✅ 예시 1 - python이 설치되어있는 ubuntu image 생성
 ```properties
 # - 사용될 Image 대상
 # FROM [베이스 이미지]
@@ -180,8 +181,62 @@ WORKDIR /var/www/html
 CMD ["python3". "-u", "-m" , "http.server"]
 ```
 
+<br/>
+
+#### ✅ 예시 2 - node 기반 빌드 후 nginx로 서버 구성
+```properties
+# base image - 기반이 될 node 이미지 다운 ㅁ
+## 여기서 AS는 dockerfile에서 사용될 별칭
+FROM node:lts-alpine AS build-stage
+
+# set working directory - 해당 컨테이너 작업 Dir
+WORKDIR ./
+
+# copy package.json and package-lock.json
+## copy 명령어를 통해 [현재 호스트파일 위치] 이동시킬 위치를 지정 
+COPY package*.json ./
+
+# install dependencies
+## npm을 install "--production"를  통해 배포에 필요 파일만 설치함
+RUN npm install --production
+
+# copy project files and folders to the working directory
+## front의 프로젝트 전체를 Copy
+COPY . .
+
+# build the project
+## npm run build 명령어를 이용하여 vue프로젝트를 build함
+RUN npm run build
+
+
+
+# production stage
+## nginx  설치 및 별칭 설정
+FROM nginx:stable-alpine AS production-stage
+
+# 베포파일 이동
+## 상단에서 사용 한 별칭을 통해 container내부 파일을 복사함
+COPY --from=build-stage ./dist /usr/share/nginx/html
+
+# Copy Nginx configuration
+## vue-router 사용으로 인해 nginx 설정 파일 수정 하여 copy
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# expose port 80
+EXPOSE 80
+
+# start the application
+## 서버 기동 명령어 사용
+### "daemon off;" 의미는 백그라운드 실행
+CMD [ "nginx", "-g", "daemon off;" ]
+
+
+```
+
 - 시나리오 - Command
   - 👉 Dockerfile 실행 : `docker build -t [이미지이름 지정:버전지정] [사용될 Dockerfile 경로]` 
+    - `docker build -t front:1.0 .`  👉  **'.'** 사용 시 현재 dir의 dockerfile을 읽음
+
 
 <br/>
 <hr/>
