@@ -233,9 +233,28 @@ CMD [ "nginx", "-g", "daemon off;" ]
 
 ```
 
+<br/>
+
+#### ✅ 예시 4 - springBoot 어플리케이션 가동 - DB 연결 문제를 해결하기 위해 docker network 사용 필수 
+```properties
+# Base 이미지로 OpenJDK를 사용합니다.
+FROM openjdk:11-jdk
+
+# 작업 디렉토리를 생성하고, Spring Boot JAR 파일을 복사합니다. 
+#WORKDIR /Users/yoo/Desktop/project/springBootStudy/loginServer/build/libs
+## 위의 경로가 파일이 있어도 제대로 인식을 못하는 문제가 있어 파일 이동 후 경로 수정
+WORKDIR ./
+COPY loginServer.jar .
+
+# 컨테이너 실행 시 실행될 명령을 지정합니다.
+CMD ["java", "-jar", "loginServer.jar"]
+```
+
+
 - 시나리오 - Command
   - 👉 Dockerfile 실행 : `docker build -t [이미지이름 지정:버전지정] [사용될 Dockerfile 경로]` 
     - `docker build -t front:1.0 .`  👉  **'.'** 사용 시 현재 dir의 dockerfile을 읽음
+  - 👉 Dockerfile 실행 - 파일지정 : `docker build -t [이미지이름 지정:버전지정] [사용될 Dockerfile 경로] -f 파일경로/파일명 .` ✅ 뒤에 **"."** 중요
 
 
 <br/>
