@@ -427,4 +427,11 @@ networks:
 <br/>
 <hr/>
 
-## 도커 Compose
+## Docker Image Export, Import 방법
+
+- Dokcer를 사용하다 보면 내가 만든 이미지를 전달 혹은 받아온 이미지를 내 Docker에 넣어야 할 경우가 있다
+- Docker Save : `Export`
+  - 내보낼 경우 `.tar`형태로 내보내진다.
+  - `$ docker save -o 만들파일명.tar 대상이미지:버전`
+- Docker Load : `Import`
+  - `$ docker load -i 받아온파일명.tar`
