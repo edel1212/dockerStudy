@@ -263,6 +263,28 @@ CMD ["java", "-jar", "loginServer.jar"]
   - 👉 Dockerfile 실행 - 파일지정 : `docker build -t [이미지이름 지정:버전지정] [사용될 Dockerfile 경로] -f 파일경로/파일명 .` ✅ 뒤에 **"."** 중요
 
 <br/>
+
+#### ✅ 예시 5 - springBoot 어플리케이션 가동 - 커맨드 라인 사용
+
+- 💬 중요 주의사항
+  - 컨테이너간 연결이 되기 위해서는 docker network 지정이 필요하기에 아래도 지정이 되어있다.
+  - 파일내 소스 내 DB접근 정보를 `spring.datasource.url=jdbc://localhost:3306/dt`와 같이 정의하면 접근이 불가능하다
+    - 해결 방법
+      - `docker network`로 연결 되어있는 `해당 DB컨테이너 이름 : 원본 포트번호 `를 입력해 줘야한다
+        - ex) `spring.datasource.url=jdbc://mariadb:7777/dt`
+
+```shell
+$ docker run -d
+  -p 80:80                                ## 포트 지정
+  --name dt-server                        ## 컨테이너명 지정
+  --network mariadb_dt-network            ## network명 지정
+  -v /usr/was:/app                        ## ✅ 중요 jar위치를 Volume으로 지정해줘야 읽고 서버가 기동된다.
+  -v /home/web1:/usr/file                 ## Host와 공유될 디렉토리 지정
+   openjdk:11                             ## Image 지정
+   java -jar /app/lxDtServer.jar          ## 컨테이너 실행 시 사용될 명령어
+```
+
+<br/>
 <hr/>
 
 ## 도커 이미지 공유하기 (push)
