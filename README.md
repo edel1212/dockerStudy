@@ -84,7 +84,7 @@
 <br/>
 <hr/>
 
-## Local 파일과 Container를 동기화 하는 방법
+## Local 파일과 Container를 동기화 하는 방법 **[ volume 지정 ]**
 
 - 호스트 내부에서 파일을 수정 할수 있기 때문에 컨터이너가 사라져도 문제가 없어짐
   > // 이미지를 사용하여 컨테이너를 생성  
@@ -295,7 +295,7 @@ CMD ["java", "-jar", "loginServer.jar"]
 
 ## Docker Network
 
-### 도커 네트워크란?
+### Docker Network란?
 
 - Docker 컨테이너는 각각 격리된 환경에서 돌아가기 떄문에 **기본적으로 다른 컨테이너와의 통신이 불가능** 하다.
 - Docker Network를 생성하여 연결하고 싶은 컨테이너를 연결해주면 각각 독립되어 있던 컨테이너가 **같은 네트워크 상에 있게 되므로 서로간의 연결이 가능**해진다.
@@ -354,7 +354,7 @@ CMD ["java", "-jar", "loginServer.jar"]
 <br/>
 <hr/>
 
-## 도커 Compose
+## Docker Compose
 
 ### 사용 이유?
 
@@ -423,3 +423,8 @@ networks:
   `docker-compse`를 사용하면 긴 명령어로 사용해야하는 옵션들을 한번에 실행 할 수 있는 파일로 생성이 가능 하다.
 - 사용 명령여
   - 해당 파일 디렉토리로 이동 후`docker-compose up -d` -d는 백그라운드 실행 의미 이다.
+
+<br/>
+<hr/>
+
+## 도커 Compose
