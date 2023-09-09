@@ -390,6 +390,8 @@ services:
   db:
     ## 사용할 이미지 지정
     image: mariadb
+    ## 생성될 컨테이너명
+    container_name: mariadb
     ## 포트번호 지정
     ports:
       - 3306:3306
@@ -415,6 +417,8 @@ networks:
     name: dt-network
 ```
 
+- 주의 사항
+  - network 사용 시 `networks-> 지정이름 -> name : ??`와 같이 지정을 해주지 않으면 `컨테이너명_네트워크명`으로 자동 적용 되므로 꼭 확인하자
 - 커맨드에서 사용한 것보다 옵션을 조금 더 많이 사용하였지만 보이는 것과 같이
   `docker-compse`를 사용하면 긴 명령어로 사용해야하는 옵션들을 한번에 실행 할 수 있는 파일로 생성이 가능 하다.
 - 사용 명령여
