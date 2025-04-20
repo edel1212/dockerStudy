@@ -350,9 +350,21 @@ $ docker run -d
   - `docker network ls`
 - Docker Network 생성
   - `docker network create 이름지정`
+- Docker Network 생성 - driver 지정
+  - `docker network create --driver <<방식 지정>> <<네트워크명>>
 - Docker Network 삭제
 
   - `docker network rm 이름지정`
+
+### network-alias
+```yaml
+# ✅ network를 alias로 지정 할 경우 같은 docker network를 공유한다면 해당 alias로 ping을 주고받을 수 있다. (라운드 로빈 방식)
+```
+- `docker network create --driver bridge mybridge` # docker network 생성
+- `docker run -itd -name container1 --net mybridge --net-alias ping-test ubuntu:14.04` # 테스트용 continer 생성
+- `docker run -itd -name container2 --net mybridge --net-alias ping-test ubuntu:14.04` # 테스트용 continer2 생성
+- `docker run -itd -name ping --net mybridge --net-alias ping-test ubuntu:14.04` # 테스트용 continer2 생성
+  - 해당 continer에 접속 후 `ping ping-test` 시 각각 돌아가며 ping이 날라가는 것 확인 가능
 
 - 자세한 명령어는 https://docs.docker.com/engine/reference/commandline/network_create/ 확인
 
