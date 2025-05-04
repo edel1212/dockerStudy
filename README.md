@@ -46,6 +46,14 @@
   - `docker network create [OPTIONS] [네트워크명]` ✏️ 네트워크 생성
     - ex) `docker network create my-net` ✏️ default driver = bridge 
     - ex) `docker network create --driver bridge [네트워크명]`
+- Docker 데몬 상태 확인
+  - `docker events`
+  - `docker system events`
+- 실행중인 컨테이너 자원 사용량 확인
+  - `docker stats`
+  - `docker stats --no--stream`
+- Docker 내 사용중인 이미지, 컨테이터, 볼륨 상태 확인
+  - `docker system df`
 
 ## 3) Docker Host란?
 
